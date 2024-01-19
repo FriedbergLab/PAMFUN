@@ -1,0 +1,122 @@
+split compare/data/balanced_fusion_dtm_assemblies.txt -l 100 -a 1 compare/data/boa
+find compare/data/mmseqs_results -type d -empty -delete
+sbatch compare/jobs/loop.job compare/data/boaa
+sbatch compare/jobs/loop.job compare/data/boab
+sbatch compare/jobs/loop.job compare/data/boac
+sbatch compare/jobs/loop.job compare/data/boad
+sbatch compare/jobs/loop.job compare/data/boae
+sbatch compare/jobs/loop.job compare/data/boaf
+sbatch compare/jobs/loop.job compare/data/boag
+sbatch compare/jobs/loop.job compare/data/boah
+sbatch compare/jobs/loop.job compare/data/boai
+sbatch compare/jobs/loop.job compare/data/boaj
+sbatch compare/jobs/loop.job compare/data/boak
+sbatch compare/jobs/loop.job compare/data/boal
+sbatch compare/jobs/loop.job compare/data/boam
+sbatch compare/jobs/loop.job compare/data/boan
+
+sbatch jobs/template.job compare/code/2_mmseqs_link_pp_prep1.R
+sbatch jobs/template.job compare/code/2_mmseqs_link_pp_prep2.R
+sbatch jobs/template.job compare/code/2_mmseqs_link_pp_prep3.R
+sbatch jobs/template.job compare/code/2_mmseqs_link_pp_prep4.R
+
+sbatch jobs/template.job compare/code/3_mmseqs_links1.R
+sbatch jobs/template.job compare/code/3_mmseqs_links2.R
+sbatch jobs/template.job compare/code/3_mmseqs_links3.R
+sbatch jobs/template.job compare/code/3_mmseqs_links4.R
+
+sbatch jobs/template.job compare/code/3_fusion_links.R 1
+sbatch jobs/template.job compare/code/3_fusion_links.R 2
+sbatch jobs/template.job compare/code/3_fusion_links.R 3
+sbatch jobs/template.job compare/code/3_fusion_links.R 4
+sbatch jobs/template.job compare/code/3_fusion_links.R 5
+sbatch jobs/template.job compare/code/3_fusion_links.R 6
+sbatch jobs/template.job compare/code/3_fusion_links.R 7
+sbatch jobs/template.job compare/code/3_fusion_links.R 8
+
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 1
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 2
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 3
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 4
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 5
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 6
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 7
+sbatch jobs/template.job compare/code/3_mmseqs_links_40.R 8
+
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 1
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 2
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 3
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 4
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 5
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 6
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 7
+sbatch jobs/template.job compare/code/3_mmseqs_links_60.R 8
+
+
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 1
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 2
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 3
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 4
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 5
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 6
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 7
+sbatch jobs/template.job compare/code/3_mmseqs_links_80.R 8
+
+
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 1
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 2
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 3
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 4
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 5
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 6
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 7
+sbatch jobs/template.job compare/code/3_mmseqs_links_100.R 8
+
+sbatch jobs/template.job compare/code/5_variable_lengths.R 1
+sbatch jobs/template.job compare/code/5_variable_lengths.R 2
+sbatch jobs/template.job compare/code/5_variable_lengths.R 3
+sbatch jobs/template.job compare/code/5_variable_lengths.R 4
+sbatch jobs/template.job compare/code/5_variable_lengths.R 5
+sbatch jobs/template.job compare/code/5_variable_lengths.R 6
+sbatch jobs/template.job compare/code/5_variable_lengths.R 7
+sbatch jobs/template.job compare/code/5_variable_lengths.R 8
+
+
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 1
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 2
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 3
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 4
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 5
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 6
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 7
+sbatch jobs/template.job compare/code/5_variable_lengths_40.R 8
+
+#
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 1
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 2
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 3
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 4
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 5
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 6
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 7
+sbatch jobs/template.job compare/code/5_variable_lengths_60.R 8
+
+
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 1
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 2
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 3
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 4
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 5
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 6
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 7
+sbatch jobs/template.job compare/code/5_variable_lengths_80.R 8
+
+
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 1
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 2
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 3
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 4
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 5
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 6
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 7
+sbatch jobs/template.job compare/code/5_variable_lengths_100.R 8
