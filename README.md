@@ -96,13 +96,10 @@ Scripts in this group are used to generate and evaluate mcl clusters of fusion f
 
 Bacterial genomes, KEGG, and taxonomy data can be downloaded from their respective sources using the scripts provided. Fusion and intermediate data files can be found at the following figshare links;
 
-Henri Chung. "Fusion Pathway Data." Figshare, 2024, doi:10.6084/m9.figshare.25025231
-
-
-Henri Chung. "KEGG Reference Data." Figshare, 2024, doi:10.6084/m9.figshare.25066163
-
-
-Henri Chung. "Fusion Predictions." Figshare, 2024, doi:10.6084/m9.figshare.25066478
+Henri Chung "Fusion Phylogenetic Profiling of Microbes", Figshare, 2024,
+Fusion Pathway Data. doi:10.6084/m9.figshare.25025231
+KEGG Reference Data. doi:10.6084/m9.figshare.25066163
+Fusion Predictions. doi:10.6084/m9.figshare.25066478
 
 ### Citation
 
