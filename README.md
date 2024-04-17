@@ -105,6 +105,10 @@ KEGG Reference Data. doi:10.6084/m9.figshare.25066163
 Fusion Predictions. doi:10.6084/m9.figshare.25066478
 
 ### Citation
+<<<<<<< HEAD
 
 To be added.
 >>>>>>> 02fddfb (update figshares)
+=======
+Chung H, Bromberg Y, Friedberg I, Assembling bacterial puzzles: piecing together functions into microbial pathways (2024) bioRxiv 2024.03.27.587058; [doi](https://doi.org/10.1101/2024.03.27.587058)
+>>>>>>> b2e2c19 (update citation)
