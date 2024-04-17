@@ -1,6 +1,17 @@
 
-<<<<<<< HEAD
-=======
+# Pathway Analysis of Microbial Function 
+## Table of Contents
+- [Introduction](#introduction)
+- [Dependencies](#dependencies)
+- [Usage](#usage)
+    - [0. Data Generation](#0-data-generation)
+    - [1. Profile Comparison](#1-profile-comparison)
+    - [2. Kaiju Annotation](#2-kaiju-annotation)
+    - [3. Mifaser Annotation](#3-mifaser-annotation)
+    - [4. MCL Clustering](#4-mcl-clustering)
+- [Data](#data)
+- [Citation](#citation)
+
 ## Introduction
 This repository is to document all code used in **Pathway Analysis of Microbial Function** or [pamfun](), a research project that generates and analyzes putatative microbial pathways using [fusion](https://doi.org/10.1093/nar/gkad757). Analysis comprises data generation, descriptive statistics, figure generation, and pathway evaluation. Analysis is intended to run in sequential order from 0-2.
 
@@ -105,10 +116,5 @@ KEGG Reference Data. doi:10.6084/m9.figshare.25066163
 Fusion Predictions. doi:10.6084/m9.figshare.25066478
 
 ### Citation
-<<<<<<< HEAD
-
-To be added.
->>>>>>> 02fddfb (update figshares)
-=======
 Chung H, Bromberg Y, Friedberg I, Assembling bacterial puzzles: piecing together functions into microbial pathways (2024) bioRxiv 2024.03.27.587058; [doi](https://doi.org/10.1101/2024.03.27.587058)
->>>>>>> b2e2c19 (update citation)
+
