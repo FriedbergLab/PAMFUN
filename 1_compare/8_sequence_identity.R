@@ -45,15 +45,15 @@ while(length(fusion_groups) > 0){
     
     writeLines(unique(p1),"sequence_identity/fusion_tmp/fusionqueryseqs1.txt")
     system("seqkit --quiet grep -f sequence_identity/fusion_tmp/fusionqueryseqs1.txt data/protein_fa/all_seqs.fa > sequence_identity/fusion_tmp/fusionquery1.fasta")
-    system("/work/idoerg/hchung/mmseqs/bin/mmseqs createdb sequence_identity/fusion_tmp/fusionquery1.fasta sequence_identity/fusion_tmp/fusionqueryDB1 -v 0")
+    system("mmseqs createdb sequence_identity/fusion_tmp/fusionquery1.fasta sequence_identity/fusion_tmp/fusionqueryDB1 -v 0")
     #
     writeLines(unique(p2),"sequence_identity/fusion_tmp/fusionqueryseqs2.txt")
     system("seqkit --quiet grep -f sequence_identity/fusion_tmp/fusionqueryseqs2.txt data/protein_fa/all_seqs.fa > sequence_identity/fusion_tmp/fusionquery2.fasta")
-    system("/work/idoerg/hchung/mmseqs/bin/mmseqs createdb sequence_identity/fusion_tmp/fusionquery2.fasta sequence_identity/fusion_tmp/fusionqueryDB2 -v 0")
+    system("mmseqs createdb sequence_identity/fusion_tmp/fusionquery2.fasta sequence_identity/fusion_tmp/fusionqueryDB2 -v 0")
     #
     system("sequence_identity/code/fake_pref.sh sequence_identity/fusion_tmp/fusionqueryDB1 sequence_identity/fusion_tmp/fusionqueryDB2 sequence_identity/fusion_tmp/allvsallpref")
-    system("/work/idoerg/hchung/mmseqs/bin/mmseqs align sequence_identity/fusion_tmp/fusionqueryDB1 sequence_identity/fusion_tmp/fusionqueryDB2 sequence_identity/fusion_tmp/allvsallpref sequence_identity/fusion_tmp/allvsallaln -e inf --alignment-mode 3 -v 0")
-    system(paste0("/work/idoerg/hchung/mmseqs/bin/mmseqs convertalis sequence_identity/fusion_tmp/fusionqueryDB1 sequence_identity/fusion_tmp/fusionqueryDB2 sequence_identity/fusion_tmp/allvsallaln sequence_identity/fusion_tmp/results.tsv --format-output 'query,target,pident' -v 0"))
+    system("mmseqs align sequence_identity/fusion_tmp/fusionqueryDB1 sequence_identity/fusion_tmp/fusionqueryDB2 sequence_identity/fusion_tmp/allvsallpref sequence_identity/fusion_tmp/allvsallaln -e inf --alignment-mode 3 -v 0")
+    system(paste0("mmseqs convertalis sequence_identity/fusion_tmp/fusionqueryDB1 sequence_identity/fusion_tmp/fusionqueryDB2 sequence_identity/fusion_tmp/allvsallaln sequence_identity/fusion_tmp/results.tsv --format-output 'query,target,pident' -v 0"))
 
     temp_results <- data.table::fread("sequence_identity/fusion_tmp/results.tsv")
     new_results <- list()

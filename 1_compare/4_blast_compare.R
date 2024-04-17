@@ -13,6 +13,7 @@ library(tidyverse)
 rm(list = ls())
 
 
+# load fusion and mmseqs data
 if(!file.exists("compare/outputs/compare_list.RDS")){
   fusion_sims <- readRDS("compare/data/fusion_variable_length_preds_900.RDS")[[1]][[1]]
   fusion_sat <- readRDS("compare/data/fusion_variable_length_sat_900.RDS")[[1]][[1]]
@@ -27,9 +28,9 @@ if(!file.exists("compare/outputs/compare_list.RDS")){
   fusion_sat <- compare_list$fusion_sat
   mmseqs_sims <- compare_list$mmseqs_sims
   mmseqs_sat <- compare_list$mmseqs_sat
-  
 }
 fusion_long <- readRDS("compare/data/protein_links_chr_dist.RDS")
+balanced_data <- data.table::fread("compare/data/balanced_data.csv")
 
 # read in KEGG data
 only_single_step_modules <- readLines("data/kegg/only_single_step_modules.txt")
@@ -116,7 +117,7 @@ apply(fusion_preds[module_id %in% fusion_exclusive][fusion_sim != 1], 1, functio
   sort(res)
 }, simplify = FALSE)
 
-#
+# any modules found exclusively by mmseqs?
 mmseq_files <- list.files("compare/data/mmseqs_results", full.names = TRUE)
 mmseq_assembly_files <- mmseq_files[grepl(paste(fusion_exclusive_not_1_assemblies, collapse = "|"), mmseq_files)]
 mmseqs_matches <- lapply(mmseq_assembly_files, function(.x){
@@ -126,7 +127,7 @@ mmseqs_matches <- lapply(mmseq_assembly_files, function(.x){
   return(res)
 }) %>% unlist(recursive = FALSE)
 
-balanced_data <- data.table::fread("compare/data/balanced_data.csv")
+# 
 fusion_matches <- lapply(names(mmseqs_matches), function(.x){
   balanced_data[fusion_lvl_1 == balanced_data[ncbi_accession2 == .x]$fusion_lvl_1]$ncbi_accession2
 }); names(fusion_matches) <- names(mmseqs_matches)
@@ -134,6 +135,7 @@ fusion_matches <- lapply(names(mmseqs_matches), function(.x){
 mmseq_exclusive_proteins <- lapply(names(fusion_matches), function(.x){ mmseqs_matches[.x][[1]][!(mmseqs_matches[.x][[1]] %in% fusion_matches[.x][[1]])]}) 
 names(mmseq_exclusive_proteins) <- names(fusion_matches)
 
+# 
 mmseq_fusions <- balanced_data[ncbi_accession2 %in% mmseq_exclusive_proteins[[9]]]$fusion_lvl_1 %>% unique()
 fusion_fusions <- balanced_data[ncbi_accession2 == names(mmseq_exclusive_proteins)[[9]]]$fusion_lvl_1
 

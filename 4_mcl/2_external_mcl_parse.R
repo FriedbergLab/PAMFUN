@@ -49,17 +49,17 @@ names(values2) <- names(values)
 protein_to_module_fastmap$mset(.list = values2)
 
 # read in clusters
-system("tr -cd '[:print:]\n' < /work/idoerg/hchung/pamfun2/mcl/outputs/results_dt.hipmcl > /work/idoerg/hchung/pamfun2/mcl/outputs/results_dt2.hipmcl")
-system("tr -cd '[:print:]\n' < /work/idoerg/hchung/pamfun2/mcl/outputs/mmseq_dt.hipmcl > /work/idoerg/hchung/pamfun2/mcl/outputs/mmseq_dt2.hipmcl")
+system("tr -cd '[:print:]\n' < mcl/outputs/results_dt.hipmcl > mcl/outputs/results_dt2.hipmcl")
+system("tr -cd '[:print:]\n' < mcl/outputs/mmseq_dt.hipmcl > mcl/outputs/mmseq_dt2.hipmcl")
 
-fusion_external_clusters_list <- readLines("/work/idoerg/hchung/pamfun2/mcl/outputs/results_dt2.hipmcl") %>% sapply(strsplit, split = "\\t")
+fusion_external_clusters_list <- readLines("mcl/outputs/results_dt2.hipmcl") %>% sapply(strsplit, split = "\\t")
 fusion_external_clusters <- lapply(fusion_external_clusters_list, function(.x){
     res <- strsplit(.x, split = " ")[[1]]
     res <- res[grepl("^[a-zA-Z]", res)]
     return(res)
     })
 
-mmseq_external_clusters_list <- readLines("/work/idoerg/hchung/pamfun2/mcl/outputs/mmseq_dt2.hipmcl") %>% sapply(strsplit, split = "\\t")
+mmseq_external_clusters_list <- readLines("mcl/outputs/mmseq_dt2.hipmcl") %>% sapply(strsplit, split = "\\t")
 mmseq_external_clusters <- lapply(mmseq_external_clusters_list, function(.x){
     if(length(.x) == 0){
         return(NULL)

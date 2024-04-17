@@ -32,8 +32,8 @@ kegg_assemblies <- data.table::fread("data/kegg/kegg_assemblies.csv") %>%
 saveRDS(kegg_assemblies, "kaiju/outputs/org_module.RDS")
 
 # export dataframe connecting fusions to ec numbers
-system("grep '>' /work/idoerg/hchung/pamfun2/mifaser/data/fusion_db_small.fa > /work/idoerg/hchung/pamfun2/mifaser/data/fusion_db_small_headers.txt")
-fusion_headers <- readLines("/work/idoerg/hchung/pamfun2/mifaser/data/fusion_db_small_headers.txt") %>% substr(., start = 2, stop = 9)
+system("grep '>' mifaser/data/fusion_db_small.fa > mifaser/data/fusion_db_small_headers.txt")
+fusion_headers <- readLines("mifaser/data/fusion_db_small_headers.txt") %>% substr(., start = 2, stop = 9)
 fusion_data <- data.table::fread("data/fusion/fusion_data.tsv")[, assembly_accession2 := gsub("\\.[0-9]", "", assembly_accession)][, ncbi_accession2 := gsub("\\.[0-9]", "", ncbi_accession)]
 setkey(fusion_data, ncbi_accession2)
 ec_data <- data.table::fread("data/fusion/uniprot-pe1-exp-ec.extended_by_hfsp.mapping")[hfsp >= 20][,ec_number := gsub("n", "", ec_number)]

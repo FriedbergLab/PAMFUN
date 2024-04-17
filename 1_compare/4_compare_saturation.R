@@ -14,9 +14,10 @@ rm(list = ls())
 # read in required data
 message(Sys.time(), " loading data.")
 fusion_data <- data.table::fread("data/fusion/fusion_data.tsv")[, assembly_accession2 := gsub("\\.[0-9]", "", assembly_accession)][, n := .N, by = fusion_lvl_1][,ncbi_accession2 := gsub("\\.[0-9]", "", ncbi_accession)]
-fusion_long <- readRDS("compare/data/protein_links_chr_dist.RDS")# readRDS("compare/outputs/fusion_long.RDS")
+fusion_long <- readRDS("compare/data/protein_links_chr_dist.RDS")
 profile_saturation <- readRDS("compare/outputs/fusion_profile_saturation.RDS")
 low_sat_proteins <- names(profile_saturation[profile_saturation <= 0.9])
+
 # read in kegg links
 only_single_step_modules <- readLines("data/kegg/only_single_step_modules.txt")
 module_links <- data.table::fread("data/kegg/protein_links_df.csv")[!(module_id %in% only_single_step_modules)]
@@ -35,6 +36,7 @@ fusion_profile_saturation <- unlist(lapply(balanced_fusion_dtms, function(.x){ro
 names(fusion_profile_saturation) <- gsub("GCA.*\\.", "", names(fusion_profile_saturation))
 rm(balanced_fusion_dtms)
 
+# read mmseqs2 saturation
 results_list <- readRDS("compare/data/balanced_mmseq_dtms.RDS")
 results_dt <- rbindlist(results_list, , idcol = "id", use.names = TRUE)
 rownames(results_dt) <- unlist(lapply(results_list, function(.x){rownames(.x)}))
@@ -42,9 +44,11 @@ mmseqs_profile_saturation <- unlist(lapply(results_list, function(.x){rowSums(.x
 names(mmseqs_profile_saturation) <- gsub("compare.*mmseq\\.", "", names(mmseqs_profile_saturation))
 rm(results_list)
 
+# convert saturation to dataframes
 fusion_profile_saturation_df <- stack(fusion_profile_saturation) %>% rename(f_sat = "values")
 mmseqs_profile_saturation_df <- stack(mmseqs_profile_saturation) %>% mutate(ind = gsub("GCA_[0-9]+\\.", "", ind)) %>% rename(m_sat = "values")
 
+# compare saturation with wilcoxon test
 fm_sat <- left_join(fusion_profile_saturation_df, mmseqs_profile_saturation_df , by = "ind") %>% rename(Var1 = "ind") %>% as.data.table()
 wilcox.test(fm_sat$f_sat, fm_sat$m_sat)
 summary(fm_sat$f_sat); sd(fm_sat$f_sat)
@@ -62,6 +66,7 @@ fusion_stats <- long_data_list[["fusion"]] %>%
   mutate(improv = ifelse(module_id %in% fusion_sig_modules, "fusion_improv", "base")) %>%
   mutate(improv = ifelse(improv == "base" & module_id != "No Module", "mmseqs_improv", improv))
 
+# what are the fusion improved modules?
 fusion_improv_stats <- fusion_stats %>%  filter(module_id %in% fusion_sig_modules) 
 fusion_worse_stats <- fusion_stats %>% filter(!(module_id %in% fusion_sig_modules)) 
 summary(fusion_improv_stats$sim); summary(fusion_worse_stats$sim)
@@ -77,6 +82,7 @@ mmseq_stats <- long_data_list[["mmseqs_40"]] %>%
   mutate(improv = ifelse(module_id %in% fusion_sig_modules, "fusion_improv", "base")) %>%
   mutate(improv = ifelse(improv == "base" & module_id != "No Module", "mmseqs_improv", improv))
 
+# compare similarities of fusion and mmseqs2 profiles
 fusion_stats %>% filter(improv == "base") %>% pull(sim) %>% summary()
 fusion_stats %>% filter(improv == "fusion_improv") %>% pull(sim) %>% summary()
 fusion_stats %>% filter(improv == "mmseqs_improv") %>% pull(sim) %>% summary()
@@ -85,7 +91,6 @@ mmseq_stats %>% filter(improv == "base") %>% pull(sim) %>% summary()
 mmseq_stats %>% filter(improv == "fusion_improv") %>% pull(sim) %>% summary()
 mmseq_stats %>% filter(improv == "mmseqs_improv") %>% pull(sim) %>% summary()
 
-#
 fusion_all <- fusion_stats$sim
 fusion_modules <- fusion_stats %>% filter(module_id != "No Module") %>% pull(sim)
 fusion_fusion_improv <- filter(fusion_stats, improv == "fusion_improv")$sim
@@ -96,6 +101,8 @@ mmseq_modules <- mmseq_stats %>% filter(module_id != "No Module") %>% pull(sim)
 mmseq_fusion_improv <- filter(mmseq_stats, improv == "fusion_improv")$sim
 mmseq_mmseqs_improv <- filter(mmseq_stats, improv == "mmseqs_improv")$sim
 
+
+# plot histogram of jaccard similarities
 p1_values <- list(fusion_all, fusion_modules, fusion_fusion_improv, fusion_mmseqs_improv, mmseq_all, mmseq_modules, mmseq_fusion_improv, mmseq_mmseqs_improv)
 names(p1_values) <- c("fusion_all", "fusion_modules", "fusion_fusion_improv",  "fusion_mmseqs_improv", "mmseq_all", "mmseq_modules", "mmseq_fusion_improv", "mmseq_mmseqs_improv")
 p1_hist <- lapply(p1_values, function(.x){tabulate(findInterval(.x*100, vec=seq(1,100,length.out=100)), nbins=100)})
@@ -136,6 +143,7 @@ p1 <- p1_data %>%
   labs(x = "Jaccard Similarity", y = "Frequency", title = "Jaccard Similarity of Identified Proteins", fill = "Method") 
 ggsave("compare/outputs/overlapping_histogram_all.png", p1, width = 10, height = 5)
 
+# what modules does mmseqs2 improve?
 mmseq_improv_stats <- mmseq_stats %>% filter(module_id %in% fusion_sig_modules) 
 mmseq_worse_stats <- mmseq_stats %>% filter(!(module_id %in% fusion_sig_modules) & module_id != "No Module")
 summary(mmseq_improv_stats$sim); summary(mmseq_worse_stats$sim)
@@ -143,6 +151,7 @@ summary(mmseq_improv_stats$sim); summary(mmseq_worse_stats$sim)
 fusion_sim <- fusion_stats %>% select(sim, improv) %>% mutate(method = "fusion")
 mmseq_sim <- mmseq_stats %>% select(sim, improv) %>% mutate(method = "mmseqs_40")
 
+# plot boxplot of jaccard similarities
 pdf("compare/outputs/sim_boxplot.pdf", width = 6, height = 6)
 compare_sim <- rbind(fusion_sim, mmseq_sim) %>%
   mutate(improv = ifelse(improv == "fusion_improv", "Fusion Improved", "MMseqs Improved"), method = ifelse(method == "fusion", "Fusion", "MMseqs (40)")) %>%
@@ -152,8 +161,11 @@ compare_sim <- rbind(fusion_sim, mmseq_sim) %>%
   labs(title = "Difference in Jaccard Similarity")
 compare_sim
 dev.off()
+
+# calculate wilcoxon test
 wilcox.test(filter(fusion_sim, improv == "base")$sim, filter(fusion_sim, improv != "base")$sim)
 wilcox.test(filter(mmseq_sim, improv == "base")$sim, filter(mmseq_sim, improv != "base")$sim)
+
 tiff("compare/outputs/sim_boxplot.tiff", width = 6, height = 6, units = "in", res = 300)
 compare_sim
 dev.off()

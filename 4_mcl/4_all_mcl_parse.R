@@ -1,5 +1,5 @@
 ## ---------------------------
-## Purpose of script: General marine metagenome clusters over all fusions.
+## Purpose of script: Generate marine metagenome clusters over all fusions.
 ## Author: Henri Chung
 ## Date Created: 2023-05-26
 ## Date Modified: 2024-01-04
@@ -11,7 +11,7 @@ rm(list = ls())
 fusion_data <- data.table::fread("data/fusion/fusion_data.tsv")[,fusion_lvl_1 := as.character(fusion_lvl_1)]
 
 # read in mifaser files
-mifaser_files <- list.files("/work/idoerg/hchung/pamfun2/metagenome/mifaser_output", pattern = "analysis.tsv", full.names = TRUE, recursive = TRUE)
+mifaser_files <- list.files("metagenome/mifaser_output", pattern = "analysis.tsv", full.names = TRUE, recursive = TRUE)
 mifaser_list <- lapply(mifaser_files, function(.x){
     temp <- (data.table::fread(.x, header = TRUE, col.names = c("fusion_lvl_1", "count"))
         [,fusion_lvl_1 := gsub("^0*", "", gsub("\\.", "",fusion_lvl_1))]
@@ -49,7 +49,6 @@ mifaser_pairs <- as.data.frame(as.matrix(mifaser_dist)) %>%
     unique()
 
 data.table::fwrite(mifaser_pairs[,c("fusion", "fusion2", "sim")], "kaiju/outputs/all_mifaser_pairs.csv", sep = "\t")
-system("module load mcl/14-137-c2ddjpo")
 system("mcl kaiju/outputs/all_mifaser_pairs.csv -I 4 --abc -o kaiju/outputs/all_mcl_mifaser")
 
 all_fusion_clusters <- readLines("kaiju/outputs/all_mcl_mifaser") %>%

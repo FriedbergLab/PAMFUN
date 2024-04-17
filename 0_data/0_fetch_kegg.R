@@ -22,7 +22,7 @@ outputFolder <- "data/kegg/"
 # --------------------------- 
 
 # read in assembly file 
-assemblies_df <- data.table::fread("data/fusion/balanced_organism_set.treemmer-RTL-0.9.gtdb.incl_taxonomy.tsv", keepLeadingZeros = TRUE)
+assemblies_df <- data.table::fread("./data/balanced_organism_set.treemmer-RTL-0.9.gtdb.incl_taxonomy.tsv", keepLeadingZeros = TRUE)
 
 # First, fetch all KEGG organism information 
 message(Sys.time(), " COLLECTING MODULE DATA")
@@ -51,7 +51,7 @@ for(i in 1:length(bac_queries)){
 	message(i)
 }
 bac_pages2 <- unlist(bac_pages, recursive = FALSE)
-saveRDS(bac_pages2, "data/kegg/bacterial_kegg_pages.RDS")
+saveRDS(bac_pages2, "./data/kegg/bacterial_kegg_pages.RDS")
 
 # filter the bacterial entries in KEGG to our dataset using assembly accession
 kegg_assemblies <- lapply(bac_pages2, function(.x){
@@ -71,10 +71,10 @@ kegg_assemblies <- lapply(bac_pages2, function(.x){
 # assemblies in kegg with the org code annotation
 colnames(kegg_assemblies) <- c("kegg_id", "org_code", "assembly_id", "tax_id")
 kegg_assemblies[,assembly_id2 := gsub("\\.[0-9]", "", assembly_id)] 
-data.table::fwrite(kegg_assemblies, "data/kegg/kegg_assemblies.csv")
+data.table::fwrite(kegg_assemblies, "./data/kegg/kegg_assemblies.csv")
 
 
-fusion_data <- data.table::fread("data/fusion/fusion_data.tsv")
+fusion_data <- data.table::fread("./data/fusion/fusion_data.tsv")
 balanced_organism_accessions <- paste("GCA_", readLines("data/fusion/balanced_organism_accessions"), sep = "")
 kegg_fusion_data <- (fusion_data
 	[,assembly_accession2 := gsub("\\.[0-9]", "", assembly_accession)]
@@ -308,7 +308,7 @@ ec_descs <- lapply(ec_pages2, function(.x){trimws(.x$name)})
 names(ec_descs) <- names(ec_pages2)
 ec_df <- as.data.table(stack(ec_descs))
 colnames(ec_df) <- c("ec_desc", "ec_number")
-fwrite(ec_df, "data/kegg/ec_descriptions.csv")
+data.table::fwrite(ec_df, "data/kegg/ec_descriptions.csv")
 
 # Write dataframe of all protein-protein interactions
 protein_interaction_list <- list()
@@ -334,21 +334,16 @@ for(i in 1:length(pathways_list)){
         unnest(links) #%>%
         #unnest(data)
 }
-# missing <- names(pathways_list)[which(is.na(protein_interaction_list))]
-# missing_list <- lapply(missing, retry_kegg)
-# names(missing_list) <- missing
-# pathways_list[names(missing_list)] <- missing_list
 names(protein_interaction_list) <- names(pathways_list)
 saveRDS(protein_interaction_list, "data/kegg/protein_interaction_list.rds")
 protein_interaction_list2 <- protein_interaction_list[!is.na(protein_interaction_list)]
 protein_links_df <- bind_rows(protein_interaction_list2)
 data.table::fwrite(protein_links_df, "data/kegg/protein_links_df.csv")
-#
-protein_interaction_list <- readRDS("data/kegg/protein_interaction_list.rds")
-#
+
+# write proteins in a module to file
 module_proteins <- as.character(unique(c(protein_links_df$Var1, protein_links_df$Var2)))
 writeLines(module_proteins, "data/kegg/module_proteins.txt")
-# 
+# write module id and descriptions
 module_data <- read_html("https://rest.kegg.jp/list/module") %>%
 	html_text() %>%
 	read.table(text = ., sep = "\t")

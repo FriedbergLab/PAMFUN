@@ -17,13 +17,13 @@ rm(list = ls())
 message(Sys.time(), " reading in data")
 balanced_fusion_dtms <- readRDS("compare/data/balanced_fusion_dtms.RDS") 
 balanced_mmseqs_dtms <- readRDS("compare/data/balanced_mmseq_dtms.RDS") 
+
 # add names to mmseqs dtms
 mmseq_folders <- list.files(path = "compare/data/mmseqs_results", pattern = "GCA", full.names = TRUE);
 mmseq_files <- lapply(mmseq_folders, list.files, pattern = "mmseq$|mmseq\\.[0-9]$", full.names = TRUE) 
 
 # list of balanced accessions with kegg annotations
 balanced_organism_accessions <- paste("GCA_", readLines("data/fusion/balanced_organism_accessions"), sep = "")
-# fusion data
 balanced_data <- data.table::fread("compare/data/balanced_data.csv")
 setkey(balanced_data, "assembly_accession2")
 
@@ -31,7 +31,6 @@ setkey(balanced_data, "assembly_accession2")
 ec_data <- data.table::fread("data/fusion/uniprot-pe-exp_seguid_to_ec_mapping.tsv")
 balanced_ec_data <- balanced_data[ec_data, ec_number := i.ec_number, on = "seguid"][,c("fusion_lvl_1", "ec_number", "ncbi_accession2", "assembly_accession2")]
 setkeyv(balanced_ec_data, c("assembly_accession2", "fusion_lvl_1"))
-
 module_proteins <- lapply(balanced_fusion_dtms, rownames) %>% unlist() %>% unname()
 
 # calculate Rand Index for proteins in the same profile to see if they have the same EC number

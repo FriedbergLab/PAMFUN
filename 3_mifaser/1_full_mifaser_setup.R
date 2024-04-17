@@ -57,8 +57,8 @@ all_proteins2 <- lapply(all_proteins, toupper)
 seqinr::write.fasta(all_proteins2, names = names(all_proteins2), "mifaser/data/fusion_db.fa")
 
 # create mifaser custom database
-system("mifaser -D /work/idoerg/hchung/pamfun/mifaser/database/fusion_database mifaser/data/fusion_db.fa")
+system("mifaser -D /mifaser/database/fusion_database mifaser/data/fusion_db.fa")
 # run misafter with custom database
-system("mifaser -d /work/idoerg/hchung/pamfun/mifaser/fusion_database -f mifaser/data/test_reads.fa -o mifaser/test_out")
+system("mifaser -d mifaser/fusion_database -f mifaser/data/test_reads.fa -o mifaser/test_out")
 quit()
 

@@ -1,4 +1,11 @@
-# functions
+## ---------------------------
+## Purpose of script: Helper functions to build fusion profiles.
+## Author: Henri Chung
+## Date Created: 2021-01-12
+## Date Modified: 2024-01-04
+## ---------------------------
+
+# function to return cooccurance matrix
 return_dtm <- function(fusion_rows, f_data){
     subset_data <- (f_data[fusion_lvl_1 %in% fusion_rows])
     cast_data <- subset_data[,.(val=.N),.(assembly_accession2, fusion_lvl_1)]
@@ -13,6 +20,7 @@ return_dtm <- function(fusion_rows, f_data){
     return(DTM_mat)
 }
 
+# convert cooccurance matrix to long format
 dist_to_long <- function(.x, cols){
   temp <- .x[sort(rownames(.x)),]
   temp <- temp[,cols]
@@ -27,6 +35,7 @@ dist_to_long <- function(.x, cols){
   return(temp_long)
 }
 
+# generate predictions
 generate_preds <- function(cols, dtms, preds_only = FALSE){
     fusion_long <- lapply(dtms, dist_to_long, cols = cols)
     fusion_long_dt <- rbindlist(fusion_long, idcol = "assembly_accession2", use.names = TRUE)
@@ -54,6 +63,8 @@ precision_recall <- function(df, truth_col, estimate_col) {
   data.frame(threshold = thresholds, precision = pr["precision",], recall = pr["recall",])
 }
 
+
+# compare profiles of different lengths
 compare_variable_lengths <- function(preds, saturation, long, k_vals = c(0.5, 0.6, 0.7, 0.8, 0.9, 1)){
   long <- long[order(link)]
   results_list <- list(); l = 1

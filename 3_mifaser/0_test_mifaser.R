@@ -229,7 +229,5 @@ seqinr::write.fasta(all_sim_reads$sequence, all_sim_reads$name, "mifaser/data/te
 saveRDS(all_sim_reads, "mifaser/data/test_reads_metadata.RDS")
 quit()
 # run misafter with custom database
-system("mifaser -D /work/idoerg/hchung/pamfun2/mifaser/database/fusion_train /work/idoerg/hchung/pamfun2/mifaser/data/fusion_train.fa")
-system("mifaser -n -d /work/idoerg/hchung/pamfun2/mifaser/database/fusion_train -f mifaser/data/test_reads.fa -o mifaser/outputs/fusion_database.out")
-
-# test mifaser with cd hit database
+system("mifaser -D mifaser/database/fusion_train mifaser/data/fusion_train.fa")
+system("mifaser -n -d mifaser/database/fusion_train -f mifaser/data/test_reads.fa -o mifaser/outputs/fusion_database.out")

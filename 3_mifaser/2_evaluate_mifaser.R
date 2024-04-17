@@ -10,7 +10,7 @@ library(data.table)
 rm(list = ls())
 
 all_sim_reads <- readRDS("mifaser/data/test_reads_metadata.RDS")
-mifaser_Res <- read_tsv("/work/idoerg/hchung/pamfun2/mifaser/outputs/fusion_database_cdhit.out/ec_count.tsv", col_names = FALSE)
+mifaser_Res <- read_tsv("mifaser/outputs/fusion_database_cdhit.out/ec_count.tsv", col_names = FALSE)
 collapse_columns <- function(df) {
   if (ncol(df) > 2) {
     first_col <- df[, 1, drop = FALSE]

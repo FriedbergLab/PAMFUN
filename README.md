@@ -1,3 +1,4 @@
+
 # Pathway Analysis of Microbial Function 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -75,7 +76,6 @@ Scripts in this group are used to build fusion and mmseqs2 profiles, calculate p
 - ``8_sequence_identity.R`` - Calculate the sequence identity between proteins in the same phylogenetic profiles.
 - ``9_distributions.R`` - Plot the distribution of sequence identity values for phylogenetic profiles.
 - ``10_all_comparison.R`` - Compare and plot the distribution of Jaccard Similarity scores between profiles from different methods.
-- ``11_pair_group_recall.R`` - Calculate and compare the performance of "Pair" vs "Group" recall for pathways.
 - ``precision_recall.cpp`` - helper function to calculate precision recall with C++ in R.
 
 ### 2. Kaiju Annotation
@@ -116,5 +116,5 @@ KEGG Reference Data. doi:10.6084/m9.figshare.25066163
 Fusion Predictions. doi:10.6084/m9.figshare.25066478
 
 ### Citation
+Chung H, Bromberg Y, Friedberg I, Assembling bacterial puzzles: piecing together functions into microbial pathways (2024) bioRxiv 2024.03.27.587058; [doi](https://doi.org/10.1101/2024.03.27.587058)
 
-To be added.

@@ -57,25 +57,9 @@ threshold_test <- bind_rows(vl_results, .id = "method")  %>%
   mutate(f1 = 2 * precision * recall / (precision + recall)) %>%
   group_by(method, profile_size,filter, replicate) %>%
   filter(method %in% c("fusion", "mmseqs_40") & replicate == 1 & filter == 0.9 & profile_size == 900)
-threshold_test %>% filter(precision > 0.8 & precision < 0.82)
-# A tibble: 2 × 10
-# Groups:   method, profile_size, filter, replicate [2]
-#   method    profile_size empty replicate filter thresholds precision recall
-#   <fct>     <chr>        <chr> <chr>     <chr>       <dbl>     <dbl>  <dbl>
-# 1 fusion    900          1     1         0.9          0.93     0.809 0.119 
-# 2 mmseqs_40 900          1     1         0.9          0.93     0.818 0.0888
-# ℹ 2 more variables: specificity <dbl>, f1 <dbl>
-
-threshold_test %>% filter(thresholds == 0.93)
-# # Groups:   method, profile_size, filter, replicate [2]
-#   method    profile_size empty replicate filter thresholds precision recall
-#   <fct>     <chr>        <chr> <chr>     <chr>       <dbl>     <dbl>  <dbl>
-# 1 fusion    900          1     1         0.9          0.93     0.809 0.119 
-# 2 mmseqs_40 900          1     1         0.9          0.93     0.818 0.0888
 
 vl_df <- bind_rows(vl_results, .id = "method")  %>%
   mutate(profile_size = as.character(profile_size)) %>%
-  # filter((profile_size == "1393" & replicate == "1") | (profile_size != "1393")) %>%
   mutate(method = factor(method, levels = c("fusion", "mmseqs_40", "mmseqs_60", "mmseqs_80", "mmseqs_100"))) %>%
   filter(!is.nan(precision) & thresholds > 0) %>%
   mutate(f1 = 2 * precision * recall / (precision + recall)) %>%
@@ -465,8 +449,6 @@ best_prc_plot3 <- best_data %>%
   values = c("fusion" = "#000000", "mmseqs_40" = "#E69F00", "mmseqs_60" = "#56B4E9", "mmseqs_80" = "#009E73", "mmseqs_100" = "#F0E442"),
   labels = c("Fusion", "MMseqs2 - 40", "MMseqs2 - 60", "MMseqs2 - 80", "MMseqs2 - 100")) 
 ggsave("compare/outputs/best_prc_plot3.png", best_prc_plot3, width = 12, height = 8, units = "in", dpi = 300)
-# quit()
-# confidence interval curves
 
 error_margin <- function(mean, sd, n) {
   z_value <- 1.645

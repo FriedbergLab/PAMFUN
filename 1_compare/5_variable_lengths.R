@@ -11,19 +11,19 @@ library(tidyverse)
 library(Rcpp)
 # clear working directory
 rm(list = ls())
-source("/work/idoerg/hchung/pamfun2/compare/code/fusion_link_helper.R")
+source("compare/code/fusion_link_helper.R")
 rm(precision_recall)
 sourceCpp("compare/code/precision_recall.cpp")
 args <- commandArgs(trailingOnly = TRUE)
 ind <- as.numeric(args[1])
 
 # read in balanced dtms
-balanced_fusion_dtms <- readRDS("/work/idoerg/hchung/pamfun2/compare/data/balanced_fusion_dtms.RDS")
+balanced_fusion_dtms <- readRDS("compare/data/balanced_fusion_dtms.RDS")
 balanced_fusion_dt <- rbindlist(balanced_fusion_dtms, use.names = TRUE)
 rownames(balanced_fusion_dt) <- unlist(lapply(balanced_fusion_dtms, rownames))
 
 # read in samples assemblies for varying lengths
-sample_assemblies0 <- readRDS("/work/idoerg/hchung/pamfun2/compare/data/balanced_fusion_sample_assemblies.RDS")
+sample_assemblies0 <- readRDS("compare/data/balanced_fusion_sample_assemblies.RDS")
 
 name <- names(sample_assemblies0)[[ind]]
 sample_assemblies <- list(sample_assemblies0[[ind]])
@@ -91,10 +91,8 @@ compare_variable_lengths <- function(preds, saturation, long){
   names(results_list) <- names_list[1:length(results_list)]
   return(results_list)
 }
-#https://pubmed.ncbi.nlm.nih.gov/16578152/
-#https://academic.oup.com/bioinformatics/article/35/17/2998/5300000?login=true
-# Calculate performance of the fusion and mmseqs profiles at different lengths.
 
+# Calculate performance of the fusion and mmseqs profiles at different lengths.
 message(Sys.time(), " loading data.")
 fusion_long <- readRDS("compare/outputs/fusion_links_long.RDS")
 fusion_variable_length_preds <- readRDS(pred_name)

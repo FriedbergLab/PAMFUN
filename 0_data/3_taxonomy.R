@@ -18,7 +18,7 @@ rm(list = ls())
 message(Sys.time(), ": Reading in data")
 fusion_data <- data.table::fread("data/fusion/fusion_data.tsv")
 
-# wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/auxillary_files/qc_failed_r207.tsv
+system('wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/auxillary_files/qc_failed_r207.tsv')
 fusion_assemblies <- (
 	unique(fusion_data[,("assembly_accession"), with = FALSE])
 	[,accession := gsub("GCA_|\\.[0-9]", "", assembly_accession)]
@@ -27,10 +27,10 @@ fusion_accessions <- fusion_assemblies[,accession]
 
 
 # download the GTDB taxonomy file
-# wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/bac120_taxonomy_r207.tsv.gz
-# gzip -d bac120_taxonomy_r207.tsv.gz
-# List of genome assemblies failing the internal GTDB QC criteria.
+system("wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/bac120_taxonomy_r207.tsv.gz")
+system("gzip -d bac120_taxonomy_r207.tsv.gz")
 
+# List of genome assemblies failing the internal GTDB QC criteria.
 # read in GTDB data
 taxa_reference <- (data.table::fread("data/taxonomy/bac120_taxonomy_r207.tsv", header = FALSE)
 	[, c("gtdb_accession", "domain") := data.table::tstrsplit(V1, "\\t")]

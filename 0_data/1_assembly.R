@@ -85,7 +85,7 @@ for(i in 1:length(subset_ftps)){
 }
 quit()
 
-#grep "Primary Assembly[[:space:]]\+[I|na|1|circular|large|eg_1|sequence1|gsn.131|DSM 122|M2/40_rep1|cPNK|MARIT|TJEJU|DPRO|Kuenenia_stuttgartiensis_MBR1]\+[[:space:]]\+Chromosome[[:space:]]\+assembled-molecule[[:space:]]\+total-length"  data/assembly_stats/*.txt > data/assembly_stats/assembly_lengths.tsv
+system('grep "Primary Assembly[[:space:]]\+[I|na|1|circular|large|eg_1|sequence1|gsn.131|DSM 122|M2/40_rep1|cPNK|MARIT|TJEJU|DPRO|Kuenenia_stuttgartiensis_MBR1]\+[[:space:]]\+Chromosome[[:space:]]\+assembled-molecule[[:space:]]\+total-length"  data/assembly_stats/*.txt > data/assembly_stats/assembly_lengths.tsv')
 assembly_stats <- data.table::fread("data/assembly_stats/assembly_lengths.tsv")[,c("V1", "V6")]
 colnames(assembly_stats) <- c("filename", "length")
 assembly_stats[,filename := stringr::str_extract(filename, "GCA_\\d+")]

@@ -15,12 +15,12 @@ rm(list = ls())
 # load helper functions
 source("compare/code/fusion_link_helper.R")
 
-# read in necessary data files
 # list of balanced accessions with kegg annotations
 balanced_organism_accessions <- paste("GCA_", readLines("data/fusion/balanced_organism_accessions"), sep = "")
 # fusion data
 fusion_data <- data.table::fread("data/fusion/fusion_data.tsv")[, assembly_accession2 := gsub("\\.[0-9]", "", assembly_accession)][, ncbi_accession2 := gsub("\\.[0-9]", "", ncbi_accession)]
 all_proteins <- readLines("compare/data/balanced_assemblies_ids")
+
 # subset to fusions that are not singletons, greater than minimum count, and module proteins.
 filtered_fusions <- (fusion_data
   [assembly_accession2 %in% balanced_organism_accessions]
@@ -28,12 +28,14 @@ filtered_fusions <- (fusion_data
   [fusion_lvl_1 != "S" & fusion_lvl_1 != "SU"] 
   [, by = fusion_lvl_1, .(count = .N) ]
   [count >= 5])
+
 # subset to balanced dataset
 balanced_data <- (fusion_data
   [fusion_lvl_1 %in% filtered_fusions$fusion_lvl_1]
   [assembly_accession2 %in% balanced_organism_accessions]
   [ncbi_accession2 %in% all_proteins])
   
+# write out balanced data
 data.table::fwrite(balanced_data, "compare/data/balanced_data.csv", sep = ",")
 setkey(balanced_data, "assembly_accession2")
 writeLines(balanced_data$ncbi_accession2, "compare/data/balanced_fusion_ncbi_accession.txt")

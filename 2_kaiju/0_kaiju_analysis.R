@@ -131,7 +131,7 @@ module_classes
 #####################################################
 
 # read in mifaser files
-mifaser_files <- list.files("/work/idoerg/hchung/pamfun2/metagenome/mifaser_output2", pattern = "analysis.tsv", full.names = TRUE, recursive = TRUE)
+mifaser_files <- list.files("metagenome/mifaser_output", pattern = "analysis.tsv", full.names = TRUE, recursive = TRUE)
 mifaser_list <- lapply(mifaser_files, function(.x){
     temp <- (data.table::fread(.x, header = TRUE, col.names = c("fusion_lvl_1", "count"))
         [,fusion_lvl_1 := gsub("^0*", "", gsub("\\.", "",fusion_lvl_1))]
@@ -299,11 +299,7 @@ mifaser_mat <- as.matrix(mifaser_dtm[,-c("ec_number")])
 mifaser_mat[mifaser_mat > 0] <- 1
 rownames(mifaser_mat) <-mifaser_dtm$ec_number
 
-#mifaser_freqs <- rownames(mifaser_mat)[(rowSums(mifaser_mat) > 1) & (rowSums(mifaser_mat) < 0.9*ncol(mifaser_mat))]
 mifaser_freqs <- rownames(mifaser_mat)[(rowSums(mifaser_mat) > 1)]
-#mifaser_freqs <- rownames(mifaser_mat)[(rowSums(mifaser_mat) > 0.9*ncol(mifaser_mat))]
-#mifaser_mat <- mifaser_mat[mifaser_freqs,]
-
 
 # cluster mifaser dist using mcl
 mifaser_dist <- dist(mifaser_mat, method = "binary")
@@ -316,7 +312,6 @@ mifaser_pairs <- as.data.frame(as.matrix(mifaser_dist)) %>%
     mutate(combo = paste(ec_number, ec_number2)) %>%
     unique()
 data.table::fwrite(mifaser_pairs[,c("ec_number", "ec_number2", "sim")], "kaiju/outputs/mifaser_pairs.csv", sep = "\t")
-system("module load mcl/14-137-c2ddjpo")
 system("mcl kaiju/outputs/mifaser_pairs.csv -I 4 --abc -o kaiju/outputs/mcl_mifaser")
 
 # calculate list of modules by EC numbers in mifaser mat
@@ -339,33 +334,8 @@ metagenome_mcl <- lapply(mcl_mifaser, function(.x){
 }) 
 metagenome_results <- bind_rows(metagenome_mcl, .id = "cluster") %>% mutate(cluster = as.numeric(as.factor(cluster))) %>% filter(values == 1)
 metagenome_kaiju_pred <- metagenome_results  %>% filter(ind %in% unique(unlist(kaiju_modules))); metagenome_kaiju_pred %>% rename("module_id" = ind) %>% left_join(module_classes, by = "module_id") %>% arrange(class)
-#    cluster values    ind
-# 1        1      1 M00002
-# 2        1      1 M00018
-# 3        1      1 M00021
-# 4        1      1 M00048
-# 5        1      1 M00051
-# 6        1      1 M00083
-# 7        1      1 M00096
-# 8        1      1 M00125
-# 9        1      1 M00176
-# 10       1      1 M00432
-# 11       1      1 M00741
 metagenome_kaiju_unpred <- metagenome_results  %>% filter(!(ind %in% unique(unlist(kaiju_modules)))); metagenome_kaiju_unpred %>% rename("module_id" = ind) %>% left_join(module_classes, by = "module_id") %>% arrange(class)
-#    cluster values    ind
-# 1        1      1 M00171
-# 2        1      1 M00346
-# 3        1      1 M00357
-# 4        1      1 M00373
-# 5        1      1 M00532
-# 6        1      1 M00535
-# 7        1      1 M00545
-# 8        1      1 M00569
-# 9        1      1 M00785
-# 10       1      1 M00878
-# 11       1      1 M00913
-# 12       1      1 M00914
-"1.3.5.2", "3.1.4.16"
+
 #####################################################
 # set up random comparison
 set.seed(123)
@@ -394,11 +364,8 @@ random_metagenome_mcl <- lapply(random_mcl_mifaser, function(.x){
 })
 random_metagenome_results <- bind_rows(random_metagenome_mcl, .id = "cluster") %>% mutate(cluster = as.numeric(as.factor(cluster))) %>% filter(values == 1)
 random_metagenome_kaiju_pred <- random_metagenome_results  %>% filter(ind %in% unique(unlist(kaiju_modules))); random_metagenome_kaiju_pred
-#   cluster values    ind
-# 1       1      1 M00053
 random_metagenome_kaiju_unpred <- random_metagenome_results  %>% filter(!(ind %in% unique(unlist(kaiju_modules)))); random_metagenome_kaiju_unpred
-#   cluster values    ind
-# 1     112      1 M00170
+
 
 #####################################################
 
@@ -438,7 +405,6 @@ mifaser_only_metagenome_mcl <- lapply(mifaser_only_mcl, function(.x){
 }) 
 mifaser_only_metagenome_results <- bind_rows(mifaser_only_metagenome_mcl, .id = "cluster") %>% mutate(cluster = as.numeric(as.factor(cluster))) %>% filter(values == 1)
 mifaser_only_metagenome_results$ind[mifaser_only_metagenome_results$ind %in% unique(unlist(kaiju_modules))] %>% as.character()
-#quit()
 
 mifaser_only_mcl_overlap <- lapply(mifaser_only_mcl , function(.x){
     res <- lapply(module_list, function(.y){
@@ -449,9 +415,7 @@ mifaser_only_mcl_overlap <- lapply(mifaser_only_mcl , function(.x){
     arrange(desc(values))
 }) 
 
-
 module_metadata <- data.table::fread("data/kegg/module_classes.csv")
-
 
 mifaser_only_modules <- mifaser_only_mcl_overlap %>% 
     bind_rows() %>% 
